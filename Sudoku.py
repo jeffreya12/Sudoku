@@ -1,6 +1,7 @@
 from time import gmtime, strftime
+import os
 
-m = [[5,3,"","",7,"","","",""],[6,"","",1,9,5,"","",""],["",9,8,"","","","",6,""],[8,"","","",6,"","","",3],[4,"","",8,"",3,"","",1],[7,"","","",2,"","","",6],["",6,"","","","",2,8,""],["","","",4,1,9,"","",5],["","","","",8,"","",7,9]] # Matriz del tablero estándar.
+tablero = [[5,3,"","",7,"","","",""],[6,"","",1,9,5,"","",""],["",9,8,"","","","",6,""],[8,"","","",6,"","","",3],[4,"","",8,"",3,"","",1],[7,"","","",2,"","","",6],["",6,"","","","",2,8,""],["","","",4,1,9,"","",5],["","","","",8,"","",7,9]] # Matriz del tablero estándar.
 
 inicio = [[0, 0], [0, 1], [0, 4], [1, 0], [1, 3], [1, 4], [1, 5], [2, 1], [2, 2], [2, 7], [3, 0], [3, 4], [3, 8], [4, 0], [4, 3], [4, 5], [4, 8], [5, 0], [5, 4], [5, 8], [6, 1], [6, 6], [6, 7], [7, 3], [7, 4], [7, 5], [7, 8], [8, 4], [8, 7], [8, 8]] # Posiciones inmutables.
 
@@ -13,7 +14,7 @@ letras = ["A", "B", "C", "D", "E", "F", "G", "H", "I"] # Letras que representan 
 
 Índice de variables
 
-m = Matriz a jugar.
+tablero = Matriz a jugar.
 inicio = Posición de los números iniciales.
 base = Número que define la base numérica. Si es 0 la base a mostrar será decimal y si es 1 la base será 2.
 n = Número a poner en la casilla.
@@ -143,7 +144,7 @@ def final (fila, columna): # Función que revisa si ya se termino o no el juego.
         return True
     elif columna == 9:
         return final (fila + 1, 0)
-    elif m [fila][columna] == "":
+    elif tablero [fila][columna] == "":
         return False
     else:
         return final (fila, columna + 1)
@@ -202,7 +203,7 @@ def comp_columna (fila, columna, n): # Función que compara el elemento con la c
 def comp_fila (fila, columna, n): # Función que compara el elemento con la fila en la que se quiere poner. La llama numero.
     if columna == 9:
         return False
-    elif n == m[fila][columna]:
+    elif n == tablero[fila][columna]:
         return True
     else:
         return comp_fila (fila, columna + 1, n)
@@ -215,16 +216,18 @@ def numero (fila, columna, base): # Función que valida el número a poner en la
         print ("\nEsa opción no es válida, por favor digite una opción válida.")
         return numero (fila, columna, base)
     if n == 0:
-        m [fila][columna] = ""
+        tablero [fila][columna] = ""
         return tab (base)
     elif n > 9 or n < 0:
         print ("\nEse número no es válido, por favor digite un número válido.")
+        
         return numero (fila, columna, base)
     elif comp_columna (0, columna, n) == True or comp_fila (fila, 0, n) == True or comp_region (fila, columna, n) == True:
         print ("\nEsa número no puede ir en esa casilla, por favor digite otro número.")
+        
         return numero (fila, columna, base)
     else:
-        m [fila][columna] = n
+        tablero [fila][columna] = n
         grabar_log (fila, columna + 1, n)
         return tab (base)
 
@@ -240,6 +243,7 @@ def columna (fila, base): # Función que valida la columna. La llama fila.
         return columna (fila, base)
     elif restringidos (fila, inst2, 0) == True:
         print ("\nEsa posición no es corregible, digite otra posición.")
+        
         return columna (fila, base)
     else:
         return numero (fila, inst2, base)
@@ -276,6 +280,7 @@ def fila (base): # Función que valida la fila. La llama tab.
         return columna (inst1, base)
     else:
         print ("\nEsa opción no es válida, por favor digite una opción válida.")
+        
         return fila (base)
 
         
@@ -283,35 +288,35 @@ def tab (base): # Función que muestra el tablero. La llama numero y base_numeri
     print("\n\t\t\t\t\t       1        2        3         4        5        6         7        8        9    ")
     print("\t\t\t\t\t  ╔══════════════════════════╗╔══════════════════════════╗╔══════════════════════════╗")
     print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
-    print("\t\t\t\t\tA ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (m[0][0], base), conversion (m[0][1], base), conversion (m[0][2], base), conversion (m[0][3], base), conversion (m[0][4], base), conversion (m[0][5], base), conversion (m[0][6], base), conversion (m[0][7], base), conversion (m[0][8], base)))
+    print("\t\t\t\t\tA ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (tablero[0][0], base), conversion (tablero[0][1], base), conversion (tablero[0][2], base), conversion (tablero[0][3], base), conversion (tablero[0][4], base), conversion (tablero[0][5], base), conversion (tablero[0][6], base), conversion (tablero[0][7], base), conversion (tablero[0][8], base)))
     print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
     print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
-    print("\t\t\t\t\tB ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (m[1][0], base), conversion (m[1][1], base), conversion (m[1][2], base), conversion (m[1][3], base), conversion (m[1][4], base), conversion (m[1][5], base), conversion (m[1][6], base), conversion (m[1][7], base), conversion (m[1][8], base)))
+    print("\t\t\t\t\tB ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (tablero[1][0], base), conversion (tablero[1][1], base), conversion (tablero[1][2], base), conversion (tablero[1][3], base), conversion (tablero[1][4], base), conversion (tablero[1][5], base), conversion (tablero[1][6], base), conversion (tablero[1][7], base), conversion (tablero[1][8], base)))
     print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
     print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
-    print("\t\t\t\t\tC ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (m[2][0], base), conversion (m[2][1], base), conversion (m[2][2], base), conversion (m[2][3], base), conversion (m[2][4], base), conversion (m[2][5], base), conversion (m[2][6], base), conversion (m[2][7], base), conversion (m[2][8], base)))
-    print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
-    print("\t\t\t\t\t  ╚══════════════════════════╝╚══════════════════════════╝╚══════════════════════════╝")
-    print("\t\t\t\t\t  ╔══════════════════════════╗╔══════════════════════════╗╔══════════════════════════╗")
-    print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
-    print("\t\t\t\t\tD ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (m[3][0], base), conversion (m[3][1], base), conversion (m[3][2], base), conversion (m[3][3], base), conversion (m[3][4], base), conversion (m[3][5], base), conversion (m[3][6], base), conversion (m[3][7], base), conversion (m[3][8], base)))
-    print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
-    print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
-    print("\t\t\t\t\tE ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (m[4][0], base), conversion (m[4][1], base), conversion (m[4][2], base), conversion (m[4][3], base), conversion (m[4][4], base), conversion (m[4][5], base), conversion (m[4][6], base), conversion (m[4][7], base), conversion (m[4][8], base)))
-    print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
-    print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
-    print("\t\t\t\t\tF ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (m[5][0], base), conversion (m[5][1], base), conversion (m[5][2], base), conversion (m[5][3], base), conversion (m[5][4], base), conversion (m[5][5], base), conversion (m[5][6], base), conversion (m[5][7], base), conversion (m[5][8], base)))
+    print("\t\t\t\t\tC ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (tablero[2][0], base), conversion (tablero[2][1], base), conversion (tablero[2][2], base), conversion (tablero[2][3], base), conversion (tablero[2][4], base), conversion (tablero[2][5], base), conversion (tablero[2][6], base), conversion (tablero[2][7], base), conversion (tablero[2][8], base)))
     print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
     print("\t\t\t\t\t  ╚══════════════════════════╝╚══════════════════════════╝╚══════════════════════════╝")
     print("\t\t\t\t\t  ╔══════════════════════════╗╔══════════════════════════╗╔══════════════════════════╗")
     print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
-    print("\t\t\t\t\tG ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (m[6][0], base), conversion (m[6][1], base), conversion (m[6][2], base), conversion (m[6][3], base), conversion (m[6][4], base), conversion (m[6][5], base), conversion (m[6][6], base), conversion (m[6][7], base), conversion (m[6][8], base)))
+    print("\t\t\t\t\tD ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (tablero[3][0], base), conversion (tablero[3][1], base), conversion (tablero[3][2], base), conversion (tablero[3][3], base), conversion (tablero[3][4], base), conversion (tablero[3][5], base), conversion (tablero[3][6], base), conversion (tablero[3][7], base), conversion (tablero[3][8], base)))
     print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
     print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
-    print("\t\t\t\t\tH ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (m[7][0], base), conversion (m[7][1], base), conversion (m[7][2], base), conversion (m[7][3], base), conversion (m[7][4], base), conversion (m[7][5], base), conversion (m[7][6], base), conversion (m[7][7], base), conversion (m[7][8], base)))
+    print("\t\t\t\t\tE ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (tablero[4][0], base), conversion (tablero[4][1], base), conversion (tablero[4][2], base), conversion (tablero[4][3], base), conversion (tablero[4][4], base), conversion (tablero[4][5], base), conversion (tablero[4][6], base), conversion (tablero[4][7], base), conversion (tablero[4][8], base)))
     print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
     print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
-    print("\t\t\t\t\tI ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (m[8][0], base), conversion (m[8][1], base), conversion (m[8][2], base), conversion (m[8][3], base), conversion (m[8][4], base), conversion (m[8][5], base), conversion (m[8][6], base), conversion (m[8][7], base), conversion (m[8][8], base)))
+    print("\t\t\t\t\tF ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (tablero[5][0], base), conversion (tablero[5][1], base), conversion (tablero[5][2], base), conversion (tablero[5][3], base), conversion (tablero[5][4], base), conversion (tablero[5][5], base), conversion (tablero[5][6], base), conversion (tablero[5][7], base), conversion (tablero[5][8], base)))
+    print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
+    print("\t\t\t\t\t  ╚══════════════════════════╝╚══════════════════════════╝╚══════════════════════════╝")
+    print("\t\t\t\t\t  ╔══════════════════════════╗╔══════════════════════════╗╔══════════════════════════╗")
+    print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
+    print("\t\t\t\t\tG ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (tablero[6][0], base), conversion (tablero[6][1], base), conversion (tablero[6][2], base), conversion (tablero[6][3], base), conversion (tablero[6][4], base), conversion (tablero[6][5], base), conversion (tablero[6][6], base), conversion (tablero[6][7], base), conversion (tablero[6][8], base)))
+    print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
+    print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
+    print("\t\t\t\t\tH ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (tablero[7][0], base), conversion (tablero[7][1], base), conversion (tablero[7][2], base), conversion (tablero[7][3], base), conversion (tablero[7][4], base), conversion (tablero[7][5], base), conversion (tablero[7][6], base), conversion (tablero[7][7], base), conversion (tablero[7][8], base)))
+    print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
+    print("\t\t\t\t\t  ║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║║┌------┐ ┌------┐ ┌------┐║")
+    print("\t\t\t\t\tI ║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║║| %4s | | %4s | | %4s |║" %(conversion (tablero[8][0], base), conversion (tablero[8][1], base), conversion (tablero[8][2], base), conversion (tablero[8][3], base), conversion (tablero[8][4], base), conversion (tablero[8][5], base), conversion (tablero[8][6], base), conversion (tablero[8][7], base), conversion (tablero[8][8], base)))
     print("\t\t\t\t\t  ║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║║└------┘ └------┘ └------┘║")
     print("\t\t\t\t\t  ╚══════════════════════════╝╚══════════════════════════╝╚══════════════════════════╝")
     if final (0, 0) == True:
@@ -344,6 +349,7 @@ def base_numerica (base): # Función que llama a las conversiones. La llama crea
         inst = int(input("\nElija el sistema numérico: "))
     except ValueError:
         print ("\nEsa opción no esta en el menú, digite una opción del menú.")
+        
         return base_numerica(base)
     if inst == 1:
         return tab (base)
@@ -371,6 +377,7 @@ def bienvenida (): # Funcion de entrada, es llamada por instrucciones, about y a
         inst = int(input("\nDigite una opción del menú: "))
     except ValueError:
         print ("\nEsa opción no esta en el menú, digite una opción del menú.")
+        
         return bienvenida()
     if inst == 1:
         return crear_log()
@@ -382,6 +389,7 @@ def bienvenida (): # Funcion de entrada, es llamada por instrucciones, about y a
         return about ()
     else:
         print ("\nEsa opción no esta en el menú, digite una opción del menú.")
+        
         return bienvenida ()
 
 
